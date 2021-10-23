@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WEB con AJAX</title>
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+	<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600&family=Noto+Sans+JP&display=swap" rel="stylesheet"> 
+	<link rel="stylesheet" href="estilos.css">
+</head>
+
+<body>
+    <header class="header">
+        <nav class="navbar">
+			<div class="contenedor">
+				<a href="assets/home.html">Home</a>
+				<a href="assets/acerca.html">Acerca</a>
+				<a href="assets/servicios.html">Servicios</a>
+				<a href="assets/contacto.html">Contacto</a>
+			</div>
+		</nav>
+        <div class="contenedor-imagen">
+			<a href="#">
+				<img src="https://images.unsplash.com/photo-1504384308090-c894fdcc538d?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=1950&q=80" alt="">
+			</a>
+		</div>
+
+    <main class="container"></main>
+
+    <footer class="footer container">
+        <p>
+          <small></small>
+        </p>
+      </footer>
+
+    <script>
+        const d =document;
+            $main=d.querySelector("main");
+        
+        const getHTML = (options) => {
+        let { url, success, error} = options;
+        const xhr = new XMLHttpRequest();
+
+        xhr.addEventListener("readystatechange", e => {
+        if (xhr.readyState !== 4) return;
+
+        if (xhr.status >= 200 && xhr.status < 300) {
+          let html = xhr.responseText;
+          success(html);
+        } else {
+          let message = xhr.statusText || "Ocurrió un error";
+          error(`Error ${xhr.status}: ${message}`);
+        }
+        });
+        
+        xhr.open("GET", url);
+        xhr.setRequestHeader("Content-type", "application/json; charset=utf-8");
+        xhr.send();
+        
+        }
+
+        //Función a ejecutar.
+        d.addEventListener("DOMContentloaded", e=>{
+            getHTML({
+                url:"assets/home.html",
+                success:(html)=> $main.innerHTML = html,
+                error:(err)=> $main.innerHTML = `<h1>$(err)</h1>`
+            });
+        });
+
+        d.addEventListener("click", e=>{
+            if(e.target.matches(".menu a")){
+                e.preventDefault();
+                getHTML({
+                url:e.target.href, //Ruta dinámica a cargar
+                success:(html)=> $main.innerHTML = html,
+                error:(err)=> $main.innerHTML = `<h1>$(err)</h1>`
+            });
+        }
+        });
+
+    </script>
+</body>
+</html>
